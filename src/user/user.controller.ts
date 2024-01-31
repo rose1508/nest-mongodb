@@ -1,35 +1,32 @@
 /* eslint-disable prettier/prettier */
+/* eslint-disable prettier/prettier */
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UserService } from './user.service';
 import { User } from './entities/user.entity';
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
-
-  @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+  constructor(
+    private readonly userService: UserService){}  
+  @Post('create')
+  async createUser(@Body() createUserDto: CreateUserDto): Promise<any> {
+    return this.userService.createUser(createUserDto);
   }
-
   @Get()
-  findAll() {
+  findAll()  {
     return this.userService.findAllUser();
   }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.viewUser(+id);
+  @Get(':username')
+  findOne(@Param('username') username: string) {
+    return this.userService.viewUser(username);
   }
-
-  @Patch(':id')
-   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) :Promise< User> { 
-    return  await this.userService.updateUser(+id, updateUserDto);
+  @Patch(':username')
+  async update(@Param('username') username: string, @Body() updateUserDto: UpdateUserDto): Promise<User> {
+    return await this.userService.updateUser(username, updateUserDto);
   }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.removeUser(+id);
+  @Delete(':username')
+  remove(@Param('username') username: string) {
+    return this.userService.removeUser(username);
   }
 }

@@ -4,10 +4,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
-import { User } from './user/entities/user.entity';
 import { ConnectionModule } from './connection/connection.module';
-import { Connection } from './connection/entities/connection.entity';
-
+import { AuthModule } from './auth/auth.module';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -16,16 +15,17 @@ import { Connection } from './connection/entities/connection.entity';
       port: 5432,
       password: 'sandhya@1234',
       username: 'postgres',
-      entities: [User,Connection],
       database: 'Hotel',
       synchronize: true,
       logging: true,
+      entities: ["dist/**/*.entity.js"],
+      migrations: ["src/migrations/*.ts"], 
     }),
     UserModule,
     ConnectionModule,
+    AuthModule,
   ],
-
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService,JwtAuthGuard],
 })
 export class AppModule {}

@@ -13,6 +13,9 @@ export class ConnectionService {
   constructor(
     @InjectRepository(Connection) private readonly connectionRepository: Repository<Connection>,
   ) {}
+  async getConnectionsByUser(userId: number): Promise<Connection[]> {
+    return this.connectionRepository.find();
+  }
   createConnection(createConnectionDto: CreateConnectionDto):Promise<Connection> {
     const connection:Connection = new Connection();
     connection.user_id= createConnectionDto.user_id;

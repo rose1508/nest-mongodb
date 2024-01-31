@@ -1,7 +1,10 @@
 /* eslint-disable prettier/prettier */
-
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-@Entity()
+import { Column, Entity, PrimaryGeneratedColumn, OneToMany, BeforeInsert } from "typeorm";
+import { Connection } from "src/connection/entities/connection.entity";
+import { Unique } from "typeorm";
+import * as bcrypt from 'bcrypt';
+@Entity('user')
+@Unique(['email'])
 export class User {
   @PrimaryGeneratedColumn()
   id:number;
@@ -25,8 +28,8 @@ email:string;
 })
 age:number;
 @Column({
-  type: 'varchar',
-  length:'15'
+  type: 'varchar'
+
 })
 password:string;
 @Column({
@@ -34,4 +37,10 @@ password:string;
   enum:['m','f','t']
 })
 gender: string;
+@OneToMany(() => Connection, (connection) => connection.user)
+  connections: Connection[];
+
+  @BeforeInsert()  async hashPassword() {
+    this.password = await bcrypt.hash(this.password, 10);  
+}
 }

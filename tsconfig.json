@@ -13,6 +13,8 @@
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": false,
+    "moduleResolution": "Node",
+    "esModuleInterop": true,
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,

@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
-
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn,ManyToOne } from "typeorm";
+import { User } from "src/user/entities/user.entity";
 @Entity()
 export class Connection {
   @PrimaryGeneratedColumn()
@@ -9,7 +9,10 @@ export class Connection {
     type:'int'
   })
   user_id:number;
-
+  @Column()
+  username:'string';
+  @ManyToOne(() => User, (user) => user.connections)
+  user: User;
 @Column({
   type: 'int'
 })
