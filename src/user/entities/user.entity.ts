@@ -29,7 +29,6 @@ email:string;
 age:number;
 @Column({
   type: 'varchar'
-
 })
 password:string;
 @Column({

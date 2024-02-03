@@ -1,5 +1,4 @@
 /* eslint-disable prettier/prettier */
-
- export const jwtConstants = {
+export const jwtConstants = {
     SECRET_KEY: 'rose@*',
 }
