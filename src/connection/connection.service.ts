@@ -8,6 +8,7 @@ import { Repository } from 'typeorm';
 import { CreateConnectionDto } from './dto/create-Connection.dto';
 import { UpdateConnectionDto } from './dto/update-Connection.dto';
 import { Connection } from './entities/connection.entity';
+import { UseGuards } from '@nestjs/common';
 @Injectable()
 export class ConnectionService {
   constructor(
@@ -16,10 +17,12 @@ export class ConnectionService {
   async getConnectionsByUser(userId: number): Promise<Connection[]> {
     return this.connectionRepository.find();
   }
+  
   createConnection(createConnectionDto: CreateConnectionDto):Promise<Connection> {
     const connection:Connection = new Connection();
     connection.user_id= createConnectionDto.user_id;
     connection.connection_user_id = createConnectionDto.connection_user_id;
+    connection.username = createConnectionDto.username;
     connection.connection_status = createConnectionDto.connection_status;
     return this.connectionRepository.save(connection);
   }

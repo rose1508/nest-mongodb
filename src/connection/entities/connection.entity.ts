@@ -9,8 +9,10 @@ export class Connection {
     type:'int'
   })
   user_id:number;
+
   @Column()
-  username:'string';
+  username:string;
+
   @ManyToOne(() => User, (user) => user.connections)
   user: User;
 @Column({

@@ -12,12 +12,16 @@ export class CreateConnectionDto {
     user_id: number;
 
     @IsNotEmpty()
+    @IsString()
+    username: string;
+
+    @IsNotEmpty()
     @IsInt()
-    connection_user_id:number;
+    connection_user_id: number;
 
     @IsNotEmpty()
     @IsString()
-    @IsEnum(['followed','connected','pending'])
-    connection_status:string;
+    @IsEnum(['followed', 'connected', 'pending'])
+    connection_status: string;
 
 }

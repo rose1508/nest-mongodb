@@ -13,6 +13,7 @@ export class AuthService {
      @Inject(forwardRef(( )=>UserService) ) 
     private readonly userService:UserService ,
       private readonly jwtservice: JwtService){}
+
   async generateToken(username: string): Promise<string> {
     const payload:JwtPayload = { sub: username };
     return  this.jwtservice.sign(payload);
@@ -30,14 +31,15 @@ export class AuthService {
     }
 
   }
-  async signIn(username: string, password: string): Promise<string> {
+  async signIn(username: string, password: string): Promise<{accessToken:string}> {
     const user = await this.userService.viewUser(username);
     if (user && (await bcrypt.compare(password, user.password))) {
-      return this.generateToken(username);
+      return  {accessToken: await this.generateToken(username)};
+
     }else{
       throw new HttpException('Invalid username or password', HttpStatus.UNAUTHORIZED);
-
     }
+    
   }
   async hashPassword(password: string): Promise<string> {
     const saltRounds = 20;
@@ -48,17 +50,13 @@ export class AuthService {
       throw new Error('Error hashing password');
     }
   }
-  async validateUser(username: string ): Promise<any> {
-    const user = await this.userService.viewUser( username );
+  async validateUser(username: string): Promise<any> {
+    const user = await this.userService.viewUser( username);
     if (!user) return null;
+    
     if (!user) {
         throw new NotAcceptableException('could not find the user');
     }
-    if (user ) {
-        return user;
-    }
-    return null;
+    return user;
 }
-
 }
-

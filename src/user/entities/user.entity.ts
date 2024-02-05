@@ -36,6 +36,13 @@ password:string;
   enum:['m','f','t']
 })
 gender: string;
+@Column({
+  type: 'varchar',
+  length: '15',
+  nullable: true,
+})
+phoneNumber: string;
+
 @OneToMany(() => Connection, (connection) => connection.user)
   connections: Connection[];
 

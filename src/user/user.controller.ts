@@ -14,18 +14,22 @@ export class UserController {
     return this.userService.createUser(createUserDto);
   }
   @Get()
+  
   findAll()  {
     return this.userService.findAllUser();
   }
   @Get(':username')
+  
   findOne(@Param('username') username: string) {
     return this.userService.viewUser(username);
   }
   @Patch(':username')
+  
   async update(@Param('username') username: string, @Body() updateUserDto: UpdateUserDto): Promise<User> {
     return await this.userService.updateUser(username, updateUserDto);
   }
   @Delete(':username')
+  
   remove(@Param('username') username: string) {
     return this.userService.removeUser(username);
   }
