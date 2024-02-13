@@ -8,13 +8,14 @@ import { ConnectionModule } from './connection/connection.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import typeorm from './config/typeorm';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from './auth/auth.gaurd';
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       load: [typeorm],
     }),
-
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) =>
@@ -25,6 +26,6 @@ import typeorm from './config/typeorm';
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService,{provide:APP_GUARD,useClass:AuthGuard}],
 })
 export class AppModule { }

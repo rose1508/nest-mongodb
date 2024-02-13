@@ -10,36 +10,35 @@ import { JwtPayload } from 'jsonwebtoken';
 @Injectable()
 export class AuthService {
   constructor(
-     @Inject(forwardRef(( )=>UserService) ) 
-    private readonly userService:UserService ,
-      private readonly jwtservice: JwtService){}
+    @Inject(forwardRef(() => UserService))
+    private readonly userService: UserService,
+    private readonly jwtservice: JwtService) { }
 
   async generateToken(username: string): Promise<string> {
-    const payload:JwtPayload = { sub: username };
-    return  this.jwtservice.sign(payload);
+    const payload: JwtPayload = { sub: username };
+    return this.jwtservice.sign(payload);
   }
   async verifyToken(token: string): Promise<any> {
-    return  this.jwtservice.verify(token);
+    return this.jwtservice.verify(token);
   }
-  async signUp(createUserDto:CreateUserDto): Promise<User> {
+  async signUp(createUserDto: CreateUserDto): Promise<User> {
     try {
-      const  user:User = await this.userService.create(createUserDto);
+      const user: User = await this.userService.create(createUserDto);
       return user;
     }
-    catch(error){
+    catch (error) {
       throw new HttpException('Username already exists', HttpStatus.CONFLICT);
     }
 
   }
-  async signIn(username: string, password: string): Promise<{accessToken:string}> {
+  async signIn(username: string, password: string): Promise<string> {
     const user = await this.userService.viewUser(username);
     if (user && (await bcrypt.compare(password, user.password))) {
-      return  {accessToken: await this.generateToken(username)};
-
-    }else{
+      return this.generateToken(username);
+    } else {
       throw new HttpException('Invalid username or password', HttpStatus.UNAUTHORIZED);
+
     }
-    
   }
   async hashPassword(password: string): Promise<string> {
     const saltRounds = 20;
@@ -51,12 +50,30 @@ export class AuthService {
     }
   }
   async validateUser(username: string): Promise<any> {
-    const user = await this.userService.viewUser( username);
+    const user = await this.userService.viewUser(username);
     if (!user) return null;
-    
+
     if (!user) {
-        throw new NotAcceptableException('could not find the user');
+      throw new NotAcceptableException('could not find the user');
     }
     return user;
-}
-}
+  }
+  async profile(user_id: number) {
+    const user = await this.userService.findOne({
+      where: {
+        id: user_id,
+      },
+      select: {
+        name:true,
+        username: true,
+        email: true,
+      },
+    });
+    if (!user) {
+      throw new NotAcceptableException('Could not find the user');
+    }
+  
+    return user;
+  }
+  }
+

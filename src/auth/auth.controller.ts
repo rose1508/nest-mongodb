@@ -1,9 +1,9 @@
 /* eslint-disable prettier/prettier */
-import { Controller, Body, Post, HttpCode, HttpStatus,Get,Request } from '@nestjs/common';
+import { Controller, Body, Post, HttpCode, HttpStatus,Get, UseGuards, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import { CreateUserDto } from 'src/user/dto/create-user.dto'
 import { Public } from 'src/decorator/public.decorator';
-
+import { AuthGuard } from '@nestjs/passport';
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -19,8 +19,9 @@ export class AuthController {
     console.log("hey");
     return await this.authService.signIn(username, password);
   }
+   @UseGuards(AuthGuard)
   @Get('profile')
-  getProfile(@Request() req) {
-    return req.user;
+  async Profile(@Req() req) {
+    return await this.authService.profile(req.id);
   }
 }

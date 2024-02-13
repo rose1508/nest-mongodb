@@ -4,7 +4,7 @@ import { ConnectionController } from './connection.controller';
 import { ConnectionService } from './connection.service';
 describe('ConnectionController', () => {
   let controller: ConnectionController;
-  beforeEach(async () => { 
+  beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ConnectionController],
       providers: [ConnectionService],

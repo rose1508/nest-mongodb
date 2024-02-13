@@ -1,20 +1,16 @@
 /* eslint-disable prettier/prettier */
-import { Strategy } from 'passport-local';
-import { PassportStrategy } from '@nestjs/passport';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { AuthService } from './auth.service';
+import { ExecutionContext, UnauthorizedException } from '@nestjs/common';
+import { AuthGuard as AuthGuardPassport } from '@nestjs/passport';
 
-@Injectable()
-export class LocalStrategy extends PassportStrategy(Strategy) {
-    constructor(private authService: AuthService) {
-        super();
-    }
+export class AuthGuard extends AuthGuardPassport('jwt') {
+  canActivate(context: ExecutionContext) {
+    return super.canActivate(context);
+  }
 
-    async validate(username: string): Promise<any> {
-        const user = await this.authService.validateUser(username);
-        if (!user) {
-            throw new UnauthorizedException();
-        }
-        return user;
+  handleRequest(err, user) {
+    if (err || !user) {
+      throw err || new UnauthorizedException();
     }
+    return user;
+  }
 }

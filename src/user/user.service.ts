@@ -34,14 +34,14 @@ async findOne(options? : object): Promise<LoginUserDto>{
   async viewUser(username: string): Promise<User> {
       return this.userRepository.findOne({ where: { username } });
     }
-  
+
   async createUser(userData: { username: string; email: string; password: string }): Promise<User> {
     const user = await this.saveUserDataToDatabase(userData);
     const existingUser = await this.userRepository.findOne({ where:{email: user.email} });
     if (existingUser) {
       throw new ConflictException('User with this email already exists');
     }
-    return await this.userRepository.save(user);
+    return user;
   }
   private async saveUserDataToDatabase(userData: {
     username: string;
@@ -76,22 +76,19 @@ async findOne(options? : object): Promise<LoginUserDto>{
   async removeUser(username: string): Promise<{ affected?: number }> {
     return await this.userRepository.delete(username);
   }
-  async findByLogin({ username, password }: LoginUserDto): Promise<LoginUserDto> {    
+  async findByLogin({ username, password }: LoginUserDto): Promise<LoginUserDto> {
     const user = await this.userRepository.findOne({ where: { username } });
-    
     if (!user) {
-        throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);    
+        throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);
     }
-      
     const areEqual = await bcrypt.compare(user.password, password);
-    
     if (!areEqual) {
-        throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);    
+        throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
     }
-    return (user);  
+    return (user);
 }
 async findByPayload({ username }: any): Promise<LoginUserDto> {
-  return await this.findOne({ 
-      where:  { username } });  
+  return await this.findOne({
+      where:  { username } });
 }
 }

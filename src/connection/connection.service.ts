@@ -1,6 +1,5 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Column } from 'typeorm';
 /* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -8,7 +7,6 @@ import { Repository } from 'typeorm';
 import { CreateConnectionDto } from './dto/create-Connection.dto';
 import { UpdateConnectionDto } from './dto/update-Connection.dto';
 import { Connection } from './entities/connection.entity';
-import { UseGuards } from '@nestjs/common';
 @Injectable()
 export class ConnectionService {
   constructor(
@@ -17,7 +15,6 @@ export class ConnectionService {
   async getConnectionsByUser(userId: number): Promise<Connection[]> {
     return this.connectionRepository.find();
   }
-  
   createConnection(createConnectionDto: CreateConnectionDto):Promise<Connection> {
     const connection:Connection = new Connection();
     connection.user_id= createConnectionDto.user_id;
