@@ -24,23 +24,31 @@ export class ConnectionController {
 
   }
   @Get('byUser/:userId')
-  async getConnectionsByUser(@Param('userId') userId: number): Promise<any> {
-    return this.connectionService.getConnectionsByUser(userId);
+  async getConnectionsByUser(@Req() req:Request ,@Param('userId') userId: number): Promise<any> {
+    const authHeader=req.headers['authorization'];
+    const token=authHeader.split(' ')[1];
+    return this.connectionService.getConnectionsByUser(userId,token);
   }
   @Get()
   findAll() {
     return this.connectionService.findAllConnection();
   }
   @Get(':user_id')
-  findOne(@Param('user_id') id: string) {
-    return this.connectionService.viewConnection(+id);
+  findOne( @Req() req:Request, @Param('user_id') id: string) {
+    const authHeader=req.headers['authorization'];
+    const token=authHeader.split(' ')[1];
+    return this.connectionService.viewConnection(+id,token);
   }
   @Patch(':user_id')
-  update(@Param('user_id') id: string, @Body() updateConnectionDto: UpdateConnectionDto) {
-    return this.connectionService.updateConnection(+id, updateConnectionDto);
+  update( @Req() req:Request,@Param('user_id') id: string, @Body() updateConnectionDto: UpdateConnectionDto) {
+    const authHeader=req.headers['authorization'];
+    const token=authHeader.split(' ')[1];
+    return this.connectionService.updateConnection(+id, updateConnectionDto,token);
   }
   @Delete(':user_id')
-  remove(@Param('user_id') id: string): Promise<{ affected?: number; }> {
-    return this.connectionService.removeConnection(+id);
+  remove( @Req() req:Request,@Param('user_id') id: string): Promise<{ affected?: number; }> {
+    const authHeader=req.headers['authorization'];
+    const token=authHeader.split(' ')[1];
+    return this.connectionService.removeConnection(+id,token);
   }
 }

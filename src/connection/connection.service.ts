@@ -14,7 +14,8 @@ export class ConnectionService {
     @InjectRepository(Connection) private readonly connectionRepository: Repository<Connection>,
     private readonly jwtStrategy:JwtStrategy
   ) {}
-  async getConnectionsByUser(userId: number): Promise<Connection[]> {
+  async getConnectionsByUser(userId: number,token:string): Promise<Connection[]> {
+    if(this.jwtStrategy.validate(token))
     return this.connectionRepository.find();
   }
   createConnection(createConnectionDto: CreateConnectionDto,token:string):Promise<Connection> {
@@ -31,17 +32,23 @@ if (this.jwtStrategy.validate(token))
   findAllConnection() : Promise<Connection[]> {
     return this.connectionRepository.find();
   }
-viewConnection (user_id:number):Promise<Connection>{
+viewConnection (user_id:number,token:string):Promise<Connection>{
+  if(this.jwtStrategy.validate(token))
   return this.connectionRepository.findOneBy({user_id});
 }
-updateConnection(user_id: number,updateConnectionDto:UpdateConnectionDto) : Promise<Connection>{
-  const connection:Connection = new Connection();
-  connection.user_id=user_id;
-  connection.connection_user_id=updateConnectionDto.connection_user_id;
-  connection.connection_status=updateConnectionDto.connection_status;
-  return this.connectionRepository.save(connection);
+updateConnection(user_id: number,updateConnectionDto:UpdateConnectionDto,token:string) : Promise<Connection>{
+  if(this.jwtStrategy.validate(token)){
+    const connection:Connection = new Connection();
+    connection.user_id=user_id;
+    connection.username=updateConnectionDto.username;
+    connection.connection_user_id=updateConnectionDto.connection_user_id;
+    connection.connection_status=updateConnectionDto.connection_status;
+    return this.connectionRepository.save(connection);
+  }
+  
 }
-removeConnection(user_id:number):Promise<{affected? : number}> {
+removeConnection(user_id:number,token:string):Promise<{affected? : number}> {
+  if(this.jwtStrategy.validate(token))
   return this.connectionRepository.delete(user_id);
 }
 }
