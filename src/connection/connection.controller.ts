@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
 import { ConnectionService } from './connection.service';
 import { CreateConnectionDto } from './dto/create-connection.dto';
 import { UpdateConnectionDto } from './dto/update-connection.dto';
@@ -17,8 +17,11 @@ export class ConnectionController {
   }
   constructor(private readonly connectionService: ConnectionService) { }
   @Post()
-  create(@Body() createConnectionDto: CreateConnectionDto) {
-    return this.connectionService.createConnection(createConnectionDto);
+  create(@Req() req:Request, @Body() createConnectionDto: CreateConnectionDto) {
+    const authHeader=req.headers['authorization'];
+    const token=authHeader.split(' ')[1];
+    return this.connectionService.createConnection(createConnectionDto,token);
+
   }
   @Get('byUser/:userId')
   async getConnectionsByUser(@Param('userId') userId: number): Promise<any> {

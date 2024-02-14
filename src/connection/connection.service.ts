@@ -7,21 +7,26 @@ import { Repository } from 'typeorm';
 import { CreateConnectionDto } from './dto/create-Connection.dto';
 import { UpdateConnectionDto } from './dto/update-Connection.dto';
 import { Connection } from './entities/connection.entity';
+import { JwtStrategy } from '../auth/jwt.strategy';
 @Injectable()
 export class ConnectionService {
   constructor(
     @InjectRepository(Connection) private readonly connectionRepository: Repository<Connection>,
+    private readonly jwtStrategy:JwtStrategy
   ) {}
   async getConnectionsByUser(userId: number): Promise<Connection[]> {
     return this.connectionRepository.find();
   }
-  createConnection(createConnectionDto: CreateConnectionDto):Promise<Connection> {
-    const connection:Connection = new Connection();
+  createConnection(createConnectionDto: CreateConnectionDto,token:string):Promise<Connection> {
+if (this.jwtStrategy.validate(token))
+    {
+      const connection:Connection = new Connection();
     connection.user_id= createConnectionDto.user_id;
     connection.connection_user_id = createConnectionDto.connection_user_id;
     connection.username = createConnectionDto.username;
     connection.connection_status = createConnectionDto.connection_status;
     return this.connectionRepository.save(connection);
+    }
   }
   findAllConnection() : Promise<Connection[]> {
     return this.connectionRepository.find();
