@@ -48,7 +48,8 @@ updateConnection(user_id: number,updateConnectionDto:UpdateConnectionDto,token:s
   
 }
 removeConnection(user_id:number,token:string):Promise<{affected? : number}> {
-  if(this.jwtStrategy.validate(token))
-  return this.connectionRepository.delete(user_id);
+  if(this.jwtStrategy.validate(token)){}
+console.log("sandhya",user_id)
+  return this.connectionRepository.delete({user_id});
 }
 }
