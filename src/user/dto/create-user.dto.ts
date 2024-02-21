@@ -9,6 +9,7 @@ import {
     Matches,
     MinLength,
 } from 'class-validator';
+import { Connection } from 'mongoose';
 const PasswordRegEx = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,9}$/;
 export class CreateUserDto {
     @IsString()
@@ -28,6 +29,8 @@ export class CreateUserDto {
     @IsString()
     @IsEnum(['f', 'm', 't'])
     gender: string;
+
+    connections:Connection[];
 
     @IsNotEmpty()
     @Matches(PasswordRegEx, { message: 'password must contain minimum 8 and maximum 9 characters,at least one uppercase letter,one lowercase letter,one number and one special character' })

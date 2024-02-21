@@ -3,7 +3,7 @@
 import { HttpException, HttpStatus, Inject, Injectable, NotAcceptableException, forwardRef } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from '../user/dto/create-user.dto';
-import { User } from 'src/user/entities/user.entity';
+import { User } from 'src/schemas/user.schema';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from 'jsonwebtoken';
@@ -23,22 +23,29 @@ export class AuthService {
   }
   async signUp(createUserDto: CreateUserDto): Promise<User> {
     try {
-      const user: User = await this.userService.create(createUserDto);
+      const user = await this.userService.create(createUserDto);
       return user;
     }
-    catch (error) {
-      throw new HttpException('Username already exists', HttpStatus.CONFLICT);
+    catch (error) {    
+      throw new HttpException('Internal server error', HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
   }
   async signIn(username: string, password: string): Promise<string> {
     const user = await this.userService.viewUser(username);
-    if (user && (await bcrypt.compare(password, user.password))) {
-      return this.generateToken(username);
-    } else {
-      throw new HttpException('Invalid username or password', HttpStatus.UNAUTHORIZED);
-
+    try{
+const compare=(await bcrypt.compare(password, user.password));
+return this.generateToken(username);
     }
+    catch(err) {
+console.log(err);
+    }
+// const compare=(await bcrypt.compare(password, user.password));
+//     if (compare ) {
+//       return this.generateToken(username);
+//     } else {
+//       throw new HttpException('Invalid username or password', HttpStatus.UNAUTHORIZED);
+//     }
   }
   async hashPassword(password: string): Promise<string> {
     const saltRounds = 20;
@@ -59,20 +66,10 @@ export class AuthService {
     return user;
   }
   async profile(user_id: number) {
-    const user = await this.userService.findOne({
-      where: {
-        id: user_id,
-      },
-      select: {
-        name:true,
-        username: true,
-        email: true,
-      },
-    });
+    const user  = await this.userService.getUserById(user_id);
     if (!user) {
       throw new NotAcceptableException('Could not find the user');
     }
-  
     return user;
   }
   }
