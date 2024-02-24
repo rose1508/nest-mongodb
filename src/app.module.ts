@@ -11,8 +11,10 @@ import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/auth.gaurd';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './schemas/user.schema';
+import { ConfigModule } from '@nestjs/config';
 @Module({
-  imports: [
+  imports:[
+    ConfigModule.forRoot(),
     MongooseModule.forRoot('mongodb://localhost:27017/questNest'),
     MongooseModule.forFeature([{name:'User',schema:UserSchema}]),
     MongooseModule.forFeatureAsync([
@@ -39,7 +41,7 @@ import { User, UserSchema } from './schemas/user.schema';
     UserModule,
     ConnectionModule,
     AuthModule,
-  ],
+],
   controllers: [AppController],
   providers: [AppService,{provide:APP_GUARD,useClass:AuthGuard}],
 })

@@ -67,16 +67,17 @@ async findAllUser(): Promise<User[]> {
     return user;
   }
   async findByLogin({ username, password }: LoginUserDto): Promise<LoginUserDto> {
-    const user = await this.userModel.findOne({ where: { username } });
+    const user = await this.userModel.findOne({ username });
     if (!user) {
-        throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);
+      throw new HttpException(`User with username ${username} not found`, HttpStatus.UNAUTHORIZED);
     }
-    const areEqual = await bcrypt.compare(user.password, password);
+    const areEqual = await bcrypt.compare(password, user.password);
     if (!areEqual) {
-        throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
+      throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
     }
-    return (user);
-}
+    return user;
+  }
+  
 async findByPayload({ username }: any): Promise<LoginUserDto> {
   return await this.userModel.findById( username );
 }

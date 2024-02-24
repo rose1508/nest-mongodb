@@ -13,11 +13,19 @@
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": false,
-    "moduleResolution": "Node",
+    "moduleResolution": "node",
     "esModuleInterop": true,
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "src/*": ["src/*"]
+    }
+  },
+  "include": [
+    "src/**/*.ts", 
+    "src/migrations-utils/ts-compiler.ts" 
+  ],
   }
-}
+
