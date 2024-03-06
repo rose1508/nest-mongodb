@@ -18,7 +18,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "migrate:create": "set TS_NODE_COMPILER_OPTIONS={\"module\":\"CommonJS\"} && migrate create --template-file ./src/migrations-utils/template.ts --migrations-dir=\"./src/migrations\"",
+    "migrate:create": "set TS_NODE_COMPILER_OPTIONS={\"module\":\"CommonJS\"} && migrate create my_migration_name --template-file ./src/migrations-utils/template.ts --migrations-dir=\"./src/migrations\"",
     "migrate:up": "migrate --migrations-dir=\"./src/migrations\" --compiler=\"ts:./src/migrations-utils/ts-compiler.js\" up",
     "migrate:down": "migrate --migrations-dir=\"./src/migrations\" --compiler=\"ts:./src/migrations-utils/ts-compiler.js\" down"
   },
