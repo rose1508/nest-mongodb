@@ -25,8 +25,9 @@ export class AuthService {
     try {
       const user = await this.userService.create(createUserDto);
       return user;
+
     }
-    catch (error) {    
+    catch (error) {
       throw new HttpException('Internal server error', HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
